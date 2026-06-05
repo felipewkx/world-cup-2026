@@ -12,11 +12,11 @@ import { Button } from '@/components/ui/button';
 import { Play, Loader2, Trophy } from 'lucide-react';
 
 const ROUND_LABELS = {
-  r16: 'roundOf16',
-  quarterFinals: 'quarterFinals',
-  semiFinals: 'semiFinals',
-  thirdPlace: 'thirdPlace',
-  final: 'final',
+  r16:          'roundOf16',
+  quarterFinals:'quarterFinals',
+  semiFinals:   'semiFinals',
+  thirdPlace:   'thirdPlace',
+  final:        'final',
 };
 
 export default function KnockoutStage() {
@@ -31,27 +31,24 @@ export default function KnockoutStage() {
 
   const handlePlay = () => {
     const nextRoundLabels = {
-      r16: { en: 'Quarter Finals', pt: 'Quartas de Final' },
-      quarterFinals: { en: 'Semi Finals', pt: 'Semifinais' },
-      semiFinals: { en: 'Finals', pt: 'Finais' },
-      thirdPlace: { en: 'Grand Final', pt: 'Grande Final' },
-      final: { en: 'Champion Crowned!', pt: 'Campeão Coroado!' },
+      r16:          { en: 'Quarter Finals',    pt: 'Quartas de Final' },
+      quarterFinals:{ en: 'Semi Finals',        pt: 'Semifinais' },
+      semiFinals:   { en: 'Finals',             pt: 'Finais' },
+      thirdPlace:   { en: 'Grand Final',        pt: 'Grande Final' },
+      final:        { en: 'Champion Crowned!',  pt: 'Campeão Coroado!' },
     };
-    const label = nextRoundLabels[knockoutRound]?.[lang] || currentLabel;
-    setTransitionTitle(label);
+    setTransitionTitle(nextRoundLabels[knockoutRound]?.[lang] || currentLabel);
     setShowTransition(true);
   };
 
   const renderRound = (label, matches, highlight = false) => {
-    if (!matches || matches.length === 0) return null;
+    if (!matches || (Array.isArray(matches) && matches.length === 0)) return null;
     const matchArray = Array.isArray(matches) ? matches : [matches];
-    
     return (
       <div className="mb-10">
-        <h3 className={`font-display font-bold text-sm md:text-base mb-4 flex items-center gap-2 ${
-          highlight ? 'text-primary' : 'text-muted-foreground'
-        }`}>
-          {highlight && <Trophy className="w-4 h-4" />}
+        <h3 className={`font-display font-bold text-sm md:text-base mb-4 flex items-center gap-2`}
+          style={{ color: highlight ? '#B8900C' : '#6C757D' }}>
+          {highlight && <Trophy className="w-4 h-4" style={{ color: '#B8900C' }} />}
           {label}
         </h3>
         <div className={`grid gap-3 ${
@@ -80,6 +77,7 @@ export default function KnockoutStage() {
         onDone={() => { setShowTransition(false); playNextKnockoutRound(); }}
         duration={2200}
       />
+
       <div className="relative z-10 max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
@@ -90,18 +88,23 @@ export default function KnockoutStage() {
           <div className="flex justify-center mb-3">
             <TournamentLogo size="small" />
           </div>
-          <h2 className="font-display font-bold text-2xl md:text-3xl">{t('bracket')}</h2>
-          <p className="text-muted-foreground text-sm mt-1">
-            {t(ROUND_LABELS[knockoutRound]) || currentLabel}
-          </p>
+          <h2 className="font-display font-bold text-2xl md:text-3xl" style={{ color: '#212529' }}>
+            {t('bracket')}
+          </h2>
+          <p className="text-sm mt-1" style={{ color: '#6C757D' }}>{currentLabel}</p>
         </motion.div>
 
-        {/* Action button */}
+        {/* Play button */}
         <div className="flex justify-center mb-8">
           <Button
             onClick={handlePlay}
             disabled={isSimulating || showTransition}
-            className="font-display font-bold bg-gradient-to-r from-primary to-yellow-500 hover:from-yellow-500 hover:to-primary text-primary-foreground rounded-xl shadow-lg shadow-primary/20 px-8 py-5 text-base"
+            className="font-display font-bold rounded-xl px-8 py-5 text-base shadow-lg hover:scale-105 transition-transform"
+            style={{
+              background: isSimulating ? '#F3F4F6' : 'linear-gradient(135deg, #F5C400, #FFD84D)',
+              color: isSimulating ? '#6C757D' : '#1A1200',
+              boxShadow: isSimulating ? 'none' : '0 6px 20px rgba(245,196,0,0.30)',
+            }}
           >
             {isSimulating ? (
               <><Loader2 className="w-5 h-5 mr-2 animate-spin" />{t('simulating')}</>
@@ -111,12 +114,12 @@ export default function KnockoutStage() {
           </Button>
         </div>
 
-        {/* Bracket display */}
-        {bracket.final?.result && renderRound(t('final'), bracket.final, true)}
-        {bracket.thirdPlace?.result && renderRound(t('thirdPlace'), bracket.thirdPlace)}
-        {bracket.semiFinals.length > 0 && renderRound(t('semiFinals'), bracket.semiFinals)}
+        {/* Bracket */}
+        {bracket.final?.result      && renderRound(t('final'),        bracket.final,        true)}
+        {bracket.thirdPlace?.result && renderRound(t('thirdPlace'),   bracket.thirdPlace)}
+        {bracket.semiFinals.length > 0  && renderRound(t('semiFinals'),   bracket.semiFinals)}
         {bracket.quarterFinals.length > 0 && renderRound(t('quarterFinals'), bracket.quarterFinals)}
-        {bracket.r16.length > 0 && renderRound(t('roundOf16'), bracket.r16)}
+        {bracket.r16.length > 0     && renderRound(t('roundOf16'),   bracket.r16)}
       </div>
     </div>
   );

@@ -1,3 +1,5 @@
+const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
+
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useI18n } from '@/lib/i18n';
@@ -17,35 +19,40 @@ export default function ChampionScreen() {
   useEffect(() => {
     if (champion && !confettiDone.current) {
       confettiDone.current = true;
-      // Multiple confetti bursts
       const fire = (opts) => confetti({ ...opts, particleCount: 100, spread: 80, origin: { y: 0.6 } });
       fire({ angle: 60, origin: { x: 0 } });
       setTimeout(() => fire({ angle: 120, origin: { x: 1 } }), 300);
-      setTimeout(() => fire({ angle: 90, origin: { x: 0.5 } }), 600);
-      setTimeout(() => {
-        confetti({ particleCount: 200, spread: 160, origin: { y: 0.4 }, colors: ['#EAB308', '#10B981', '#FFFFFF'] });
-      }, 1000);
+      setTimeout(() => fire({ angle: 90,  origin: { x: 0.5 } }), 600);
+      setTimeout(() => confetti({
+        particleCount: 220,
+        spread: 170,
+        origin: { y: 0.4 },
+        colors: ['#F5C400', '#259A5A', '#E53535', '#FFFFFF', '#FF8A00'],
+      }), 1000);
     }
   }, [champion]);
 
   if (!champion || !bracket) return null;
 
   const champName = getTeamName(champion, lang);
-  const runnerUp = bracket.final.winner === bracket.final.teamA ? bracket.final.teamB : bracket.final.teamA;
-  const third = bracket.thirdPlace?.winner;
-  const fourth = bracket.thirdPlace?.winner === bracket.thirdPlace?.teamA ? bracket.thirdPlace?.teamB : bracket.thirdPlace?.teamA;
+  const runnerUp  = bracket.final.winner === bracket.final.teamA ? bracket.final.teamB : bracket.final.teamA;
+  const third     = bracket.thirdPlace?.winner;
+  const fourth    = bracket.thirdPlace?.winner === bracket.thirdPlace?.teamA
+    ? bracket.thirdPlace?.teamB
+    : bracket.thirdPlace?.teamA;
 
   const ranking = [
-    { team: champion, label: t('champion_label'), emoji: '🥇', color: 'from-yellow-400 to-amber-600' },
-    { team: runnerUp, label: t('runnerUp'), emoji: '🥈', color: 'from-gray-300 to-gray-500' },
-    { team: third, label: t('thirdPlaceLabel'), emoji: '🥉', color: 'from-amber-600 to-orange-800' },
-    { team: fourth, label: t('fourthPlace'), emoji: '🏅', color: 'from-slate-400 to-slate-600' },
+    { team: champion, label: t('champion_label'), emoji: '🥇', bg: '#FFF9E6', border: '#F5C400', textColor: '#92740A' },
+    { team: runnerUp, label: t('runnerUp'),        emoji: '🥈', bg: '#F8F9FA', border: '#ADB5BD', textColor: '#495057' },
+    { team: third,    label: t('thirdPlaceLabel'), emoji: '🥉', bg: '#FFF5EE', border: '#FF8A00', textColor: '#C05A00' },
+    { team: fourth,   label: t('fourthPlace'),     emoji: '🏅', bg: '#F8F9FA', border: '#CDD1D7', textColor: '#6C757D' },
   ].filter(r => r.team);
 
   return (
     <div className="min-h-screen relative px-4 py-8 flex flex-col items-center">
       <StadiumBackground />
       <GlobalLanguageBar />
+
       <div className="relative z-10 w-full max-w-2xl mx-auto flex flex-col items-center">
         {/* Trophy */}
         <motion.div
@@ -54,55 +61,67 @@ export default function ChampionScreen() {
           transition={{ type: 'spring', duration: 1.5, bounce: 0.4 }}
           className="mb-6"
         >
-          <div className="relative">
-            <div className="text-8xl md:text-[120px] animate-float">🏆</div>
-            <div className="absolute inset-0 text-8xl md:text-[120px] blur-2xl opacity-30">🏆</div>
-          </div>
+          <img
+            src="https://media.db.com/images/public/6a20aae66be16c9d1d43c7fb/87fc41693_FIFA-2026-World-Cup-Logo-75.png"
+            alt="FIFA World Cup 2026"
+            className="w-36 h-36 md:w-48 md:h-48 object-contain animate-float"
+            style={{ filter: 'drop-shadow(0 6px 24px rgba(245,196,0,0.35))' }}
+          />
         </motion.div>
 
-        {/* Champion title */}
+        {/* Champion */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="text-center mb-8"
+          className="text-center mb-8 w-full"
         >
-          <p className="font-display text-xs md:text-sm tracking-[0.3em] text-primary/70 uppercase mb-2">
-            🏆 {t('champion')} 🏆
+          <p className="font-display text-xs md:text-sm tracking-[0.3em] uppercase mb-2"
+            style={{ color: '#B8900C' }}>
+            ⭐ {t('champion')} ⭐
           </p>
           <div className="flex items-center justify-center gap-4 mb-4">
             <span className="text-5xl md:text-7xl">{champion.flag}</span>
           </div>
-          <h1 className="font-display font-black text-3xl md:text-5xl bg-gradient-to-r from-primary via-yellow-300 to-primary bg-clip-text text-transparent animate-gradient mb-4">
+          <h1 className="font-display font-black text-3xl md:text-5xl mb-4"
+            style={{
+              background: 'linear-gradient(135deg, #B8900C, #F5C400, #FFE066, #F5C400, #B8900C)',
+              backgroundSize: '200% 100%',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              animation: 'gradient-shift 3s ease infinite',
+            }}>
             {champName}
           </h1>
 
           {champion.isHuman && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 1 }}
-              className="glass-strong rounded-2xl p-6 mt-4 animate-pulse-glow"
+              className="rounded-2xl p-6 mt-4 border"
+              style={{ background: '#FFF9E6', borderColor: '#F5C400', boxShadow: '0 4px 20px rgba(245,196,0,0.20)' }}
             >
-              <p className="font-display font-bold text-xl md:text-2xl text-primary mb-2">
+              <p className="font-display font-bold text-xl md:text-2xl mb-2" style={{ color: '#92740A' }}>
                 {t('congratulations')}, {champion.player}! 🎉
               </p>
-              <p className="text-muted-foreground text-sm md:text-base">
+              <p className="text-sm md:text-base" style={{ color: '#6C757D' }}>
                 {t('youWon')} {champName}!
               </p>
             </motion.div>
           )}
         </motion.div>
 
-        {/* Final ranking */}
+        {/* Ranking */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5 }}
           className="w-full mb-10"
         >
-          <h3 className="font-display font-bold text-lg text-center mb-6 flex items-center justify-center gap-2">
-            <Medal className="w-5 h-5 text-primary" />
+          <h3 className="font-display font-bold text-lg text-center mb-6 flex items-center justify-center gap-2"
+            style={{ color: '#212529' }}>
+            <Medal className="w-5 h-5" style={{ color: '#B8900C' }} />
             {t('finalRanking')}
           </h3>
 
@@ -113,32 +132,36 @@ export default function ChampionScreen() {
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 1.8 + i * 0.15 }}
-                className="glass rounded-xl p-4 flex items-center gap-4"
+                className="rounded-xl p-4 flex items-center gap-4 border"
+                style={{ background: r.bg, borderColor: r.border, boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
               >
                 <span className="text-2xl md:text-3xl">{r.emoji}</span>
                 <span className="text-2xl md:text-3xl">{r.team.flag}</span>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm md:text-base truncate">{getTeamName(r.team, lang)}</p>
+                  <p className="font-semibold text-sm md:text-base truncate" style={{ color: '#212529' }}>
+                    {getTeamName(r.team, lang)}
+                  </p>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className={`text-xs font-display font-bold bg-gradient-to-r ${r.color} bg-clip-text text-transparent`}>
+                    <span className="text-xs font-display font-bold" style={{ color: r.textColor }}>
                       {r.label}
                     </span>
                     {r.team.isHuman && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-primary/20 text-primary">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full font-bold"
+                        style={{ background: 'rgba(245,196,0,0.20)', color: '#92740A', border: '1px solid rgba(234,179,8,0.4)' }}>
                         🎮 {r.team.player}
                       </span>
                     )}
                   </div>
                 </div>
-                <div className="text-right">
-                  <span className="font-display font-bold text-lg text-muted-foreground">{r.team.rating}</span>
-                </div>
+                <span className="font-display font-bold text-base" style={{ color: '#6C757D' }}>
+                  {r.team.rating}
+                </span>
               </motion.div>
             ))}
           </div>
         </motion.div>
 
-        {/* New game button */}
+        {/* New game */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -146,7 +169,12 @@ export default function ChampionScreen() {
         >
           <Button
             onClick={resetGame}
-            className="px-8 py-5 font-display font-bold bg-gradient-to-r from-primary to-yellow-500 hover:from-yellow-500 hover:to-primary text-primary-foreground rounded-2xl shadow-xl shadow-primary/20 text-base"
+            className="px-8 py-5 font-display font-bold rounded-2xl shadow-xl text-base hover:scale-105 transition-transform"
+            style={{
+              background: 'linear-gradient(135deg, #F5C400, #FFD84D)',
+              color: '#1A1200',
+              boxShadow: '0 6px 20px rgba(245,196,0,0.30)',
+            }}
           >
             <RotateCcw className="w-5 h-5 mr-2" />
             {t('newGame')}

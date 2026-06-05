@@ -1,149 +1,222 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════════════════════
+   DESIGN TOKENS — LIGHT MODE ONLY
+   Base: white / near-white
+   Accents: emerald green, gold/yellow, torch red, orange
+   No dark blues or dark greens
+   ═══════════════════════════════════════════════════════════════════ */
 @layer base {
   :root {
-    --background: 220 20% 6%;
-    --foreground: 210 20% 95%;
-    --card: 220 18% 10%;
-    --card-foreground: 210 20% 95%;
-    --popover: 220 18% 10%;
-    --popover-foreground: 210 20% 95%;
-    --primary: 45 100% 51%;
-    --primary-foreground: 220 20% 6%;
-    --secondary: 160 84% 39%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 220 15% 15%;
-    --muted-foreground: 210 10% 55%;
-    --accent: 220 15% 18%;
-    --accent-foreground: 210 20% 95%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 220 15% 18%;
-    --input: 220 15% 18%;
-    --ring: 45 100% 51%;
-    --chart-1: 45 100% 51%;
-    --chart-2: 160 84% 39%;
-    --chart-3: 200 80% 50%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --background:          0 0% 100%;
+    --foreground:          210 11% 15%;
+    --card:                0 0% 100%;
+    --card-foreground:     210 11% 15%;
+    --popover:             0 0% 100%;
+    --popover-foreground:  210 11% 15%;
+    --primary:             43 96% 50%;
+    --primary-foreground:  210 11% 12%;
+    --secondary:           152 60% 36%;
+    --secondary-foreground: 0 0% 100%;
+    --muted:               210 8% 96%;
+    --muted-foreground:    210 8% 40%;
+    --accent:              25 95% 55%;
+    --accent-foreground:   0 0% 100%;
+    --destructive:         0 76% 54%;
+    --destructive-foreground: 0 0% 100%;
+    --border:              210 10% 88%;
+    --input:               210 10% 88%;
+    --ring:                43 96% 50%;
+    --chart-1: 43 96% 50%;
+    --chart-2: 152 60% 36%;
+    --chart-3: 25 95% 55%;
+    --chart-4: 0 76% 54%;
+    --chart-5: 84 70% 44%;
     --radius: 0.75rem;
     --font-heading: 'Orbitron', ui-sans-serif, system-ui, sans-serif;
-    --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-body:    'Inter',    ui-sans-serif, system-ui, sans-serif;
     --font-display: 'Orbitron', ui-sans-serif, system-ui, sans-serif;
-    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    --sidebar-background: 220 18% 8%;
-    --sidebar-foreground: 210 20% 95%;
-    --sidebar-primary: 45 100% 51%;
-    --sidebar-primary-foreground: 220 20% 6%;
-    --sidebar-accent: 220 15% 15%;
-    --sidebar-accent-foreground: 210 20% 95%;
-    --sidebar-border: 220 15% 18%;
-    --sidebar-ring: 45 100% 51%;
+    --font-mono:    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 210 11% 15%;
+    --sidebar-primary: 43 96% 50%;
+    --sidebar-primary-foreground: 210 11% 12%;
+    --sidebar-accent: 210 8% 96%;
+    --sidebar-accent-foreground: 210 11% 15%;
+    --sidebar-border: 210 10% 88%;
+    --sidebar-ring: 43 96% 50%;
   }
 
+  /* ── DARK MODE TOKENS ─────────────────────────────────────────────────────── */
   .dark {
-    --background: 220 20% 6%;
-    --foreground: 210 20% 95%;
-    --card: 220 18% 10%;
-    --card-foreground: 210 20% 95%;
-    --popover: 220 18% 10%;
-    --popover-foreground: 210 20% 95%;
-    --primary: 45 100% 51%;
-    --primary-foreground: 220 20% 6%;
-    --secondary: 160 84% 39%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 220 15% 15%;
-    --muted-foreground: 210 10% 55%;
-    --accent: 220 15% 18%;
-    --accent-foreground: 210 20% 95%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 220 15% 18%;
-    --input: 220 15% 18%;
-    --ring: 45 100% 51%;
-    --chart-1: 45 100% 51%;
-    --chart-2: 160 84% 39%;
-    --chart-3: 200 80% 50%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --background:          0 0% 0%;            /* #000000 */
+    --foreground:          0 0% 95%;           /* #F2F2F2 */
+    --card:                0 0% 7%;            /* #111111 */
+    --card-foreground:     0 0% 95%;
+    --popover:             0 0% 7%;
+    --popover-foreground:  0 0% 95%;
+    --primary:             51 100% 56%;        /* Neon Yellow #FFF01F */
+    --primary-foreground:  0 0% 0%;
+    --secondary:           111 100% 54%;       /* Neon Green #39FF14 */
+    --secondary-foreground: 0 0% 0%;
+    --muted:               0 0% 12%;           /* #1F1F1F */
+    --muted-foreground:    0 0% 55%;           /* #8C8C8C */
+    --accent:              206 100% 50%;       /* Neon Blue #00A2FF */
+    --accent-foreground:   0 0% 0%;
+    --destructive:         0 100% 60%;         /* Neon Red #FF3131 */
+    --destructive-foreground: 0 0% 100%;
+    --border:              0 0% 16%;           /* #292929 */
+    --input:               0 0% 16%;
+    --ring:                206 100% 50%;
+    --chart-1: 51 100% 56%;
+    --chart-2: 111 100% 54%;
+    --chart-3: 206 100% 50%;
+    --chart-4: 0 100% 60%;
+    --chart-5: 300 100% 51%;
+    --sidebar-background: 0 0% 4%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 51 100% 56%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 14%;
+    --sidebar-ring: 206 100% 50%;
   }
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
+  * { @apply border-border outline-ring/50; }
   body {
     @apply bg-background text-foreground font-body;
+    transition: background-color 0.35s ease, color 0.35s ease;
   }
 }
 
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+/* ═══════════════════════════════════════════════════════════════════
+   HUMAN TEAM — gold shimmer on light background
+   ═══════════════════════════════════════════════════════════════════ */
+@keyframes gold-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+@keyframes gold-pulse-border {
+  0%, 100% { box-shadow: 0 0 0 1.5px rgba(234,179,8,0.60), 0 2px 12px rgba(234,179,8,0.18); }
+  50%       { box-shadow: 0 0 0 2.5px rgba(234,179,8,0.95), 0 4px 22px rgba(234,179,8,0.30); }
 }
 
+.human-team-row {
+  background: linear-gradient(
+    105deg,
+    rgba(251,213,78,0.20) 0%,
+    rgba(234,179,8,0.30) 38%,
+    rgba(255,236,130,0.38) 52%,
+    rgba(234,179,8,0.22) 66%,
+    rgba(251,213,78,0.14) 100%
+  ) !important;
+  background-size: 300% 100% !important;
+  animation: gold-shimmer 3s linear infinite, gold-pulse-border 2.2s ease-in-out infinite !important;
+  border-radius: var(--radius);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   LIGHT CARD / PANEL UTILITY
+   ═══════════════════════════════════════════════════════════════════ */
+.card-light {
+  background: #FFFFFF;
+  border: 1px solid #DDE1E7;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+  border-radius: var(--radius);
+}
+.card-light-hover {
+  background: #FFFFFF;
+  border: 1px solid #DDE1E7;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+  border-radius: var(--radius);
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.card-light-hover:hover {
+  border-color: #B8C0CC;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 8px 24px rgba(0,0,0,0.06);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MISC ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════ */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
 }
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(234, 179, 8, 0.2); }
-  50% { box-shadow: 0 0 40px rgba(234, 179, 8, 0.4); }
-}
-
 @keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-
-.animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.75; }
+  50%       { opacity: 1; }
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+.animate-float      { animation: float 3.2s ease-in-out infinite; }
+.animate-gradient   { background-size: 200% 200%; animation: gradient-shift 4s ease infinite; }
+.animate-pulse-glow { animation: pulse-glow 2.5s ease-in-out infinite; }
+
+/* Glass utilities — adapt per theme */
+.glass        { background: rgba(255,255,255,0.9); border: 1px solid rgba(0,0,0,0.08); backdrop-filter: blur(8px); }
+.glass-strong { background: rgba(255,255,255,0.96); border: 1px solid rgba(0,0,0,0.10); backdrop-filter: blur(12px); }
+.dark .glass        { background: rgba(17,17,17,0.88); border: 1px solid rgba(0,162,255,0.15); }
+.dark .glass-strong { background: rgba(10,10,10,0.96); border: 1px solid rgba(0,162,255,0.20); }
+
+/* ── DARK CARD OVERRIDE ─────────────────────────────────────────────────────── */
+.dark .card-light {
+  background: #111111;
+  border: 1px solid #292929;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.6), 0 0 20px rgba(0,162,255,0.04);
+}
+.dark .card-light-hover {
+  background: #111111;
+  border: 1px solid #292929;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.dark .card-light-hover:hover {
+  border-color: #00A2FF55;
+  box-shadow: 0 0 0 1px #00A2FF33, 0 4px 20px rgba(0,162,255,0.12);
 }
 
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
+/* ── NEON GLOW UTILITIES (dark only) ────────────────────────────────────────── */
+.dark .neon-blue  { color: #00A2FF; text-shadow: 0 0 8px rgba(0,162,255,0.6); }
+.dark .neon-green { color: #39FF14; text-shadow: 0 0 8px rgba(57,255,20,0.6); }
+.dark .neon-red   { color: #FF3131; text-shadow: 0 0 8px rgba(255,49,49,0.6); }
+.dark .neon-yellow{ color: #FFF01F; text-shadow: 0 0 8px rgba(255,240,31,0.6); }
+
+/* ── HUMAN TEAM ROW – dark version ─────────────────────────────────────────── */
+.dark .human-team-row {
+  background: linear-gradient(
+    105deg,
+    rgba(0,162,255,0.08) 0%,
+    rgba(0,162,255,0.18) 38%,
+    rgba(57,255,20,0.12) 52%,
+    rgba(0,162,255,0.10) 66%,
+    rgba(0,162,255,0.06) 100%
+  ) !important;
+  animation: gold-shimmer 3s linear infinite, gold-pulse-border 2.2s ease-in-out infinite !important;
 }
 
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 4s ease infinite;
+/* Smooth theme transition on all elements */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 0.25s;
+  transition-timing-function: ease;
 }
 
-.glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.glass-strong {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: hsl(220 20% 6%);
-}
-::-webkit-scrollbar-thumb {
-  background: hsl(220 15% 25%);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(220 15% 35%);
-}
+/* ═══════════════════════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar        { width: 5px; }
+::-webkit-scrollbar-track  { background: #F3F4F6; }
+::-webkit-scrollbar-thumb  { background: #CDD1D7; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #B0B6BF; }

@@ -20,11 +20,6 @@ export default function GroupStage() {
   const [showTransition, setShowTransition] = useState(false);
   const allComplete = groups.every(g => g.completed);
 
-  const handleAdvance = () => {
-    setShowTransition(true);
-  };
-
-  // Get matches for current view
   const allMatches = groups.flatMap(g => g.matches);
   const matchesByMatchday = [1, 2, 3].map(md => allMatches.filter(m => m.matchday === md));
 
@@ -41,6 +36,7 @@ export default function GroupStage() {
         onDone={() => { setShowTransition(false); startKnockout(); }}
         duration={2500}
       />
+
       <div className="relative z-10 max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
@@ -51,21 +47,26 @@ export default function GroupStage() {
           <div className="flex justify-center mb-3">
             <TournamentLogo size="small" />
           </div>
-          <h2 className="font-display font-bold text-2xl md:text-3xl">{t('groupStage')}</h2>
-          <p className="text-muted-foreground text-sm mt-1">
+          <h2 className="font-display font-bold text-2xl md:text-3xl" style={{ color: '#212529' }}>
+            {t('groupStage')}
+          </h2>
+          <p className="text-sm mt-1" style={{ color: '#6C757D' }}>
             {t('matchday')} {groupMatchday}/3
           </p>
         </motion.div>
 
-        {/* View toggle & action */}
+        {/* Controls */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-          <Tabs value={view} onValueChange={setView} className="w-auto">
-            <TabsList className="bg-white/5">
-              <TabsTrigger value="standings" className="gap-1.5 data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
+          <Tabs value={view} onValueChange={setView}>
+            <TabsList style={{ background: '#F3F4F6', border: '1px solid #DDE1E7' }}>
+              <TabsTrigger value="standings"
+                className="gap-1.5 data-[state=active]:text-foreground"
+                style={{ '--tw-ring-color': 'transparent' }}>
                 <LayoutGrid className="w-3.5 h-3.5" />
                 {t('standings')}
               </TabsTrigger>
-              <TabsTrigger value="matches" className="gap-1.5 data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
+              <TabsTrigger value="matches"
+                className="gap-1.5 data-[state=active]:text-foreground">
                 <List className="w-3.5 h-3.5" />
                 {t('matches')}
               </TabsTrigger>
@@ -76,7 +77,12 @@ export default function GroupStage() {
             <Button
               onClick={playMatchday}
               disabled={isSimulating}
-              className="font-display font-bold bg-gradient-to-r from-primary to-yellow-500 hover:from-yellow-500 hover:to-primary text-primary-foreground rounded-xl shadow-lg shadow-primary/20 px-6 py-5"
+              className="font-display font-bold rounded-xl px-6 py-5 shadow-md hover:scale-105 transition-transform"
+              style={{
+                background: isSimulating ? '#F3F4F6' : 'linear-gradient(135deg, #F5C400, #FFD84D)',
+                color: isSimulating ? '#6C757D' : '#1A1200',
+                boxShadow: isSimulating ? 'none' : '0 4px 14px rgba(245,196,0,0.30)',
+              }}
             >
               {isSimulating ? (
                 <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{t('simulating')}</>
@@ -86,8 +92,13 @@ export default function GroupStage() {
             </Button>
           ) : (
             <Button
-              onClick={handleAdvance}
-              className="font-display font-bold bg-gradient-to-r from-secondary to-emerald-400 hover:from-emerald-400 hover:to-secondary text-secondary-foreground rounded-xl shadow-lg shadow-secondary/20 px-6 py-5"
+              onClick={() => setShowTransition(true)}
+              className="font-display font-bold rounded-xl px-6 py-5 shadow-md hover:scale-105 transition-transform"
+              style={{
+                background: 'linear-gradient(135deg, #259A5A, #34D679)',
+                color: '#FFFFFF',
+                boxShadow: '0 4px 14px rgba(37,154,90,0.30)',
+              }}
             >
               {t('advanceToKnockout')}
               <ArrowRight className="w-4 h-4 ml-2" />
@@ -119,7 +130,7 @@ export default function GroupStage() {
               {matchesByMatchday.map((matches, mdIdx) => (
                 matches.length > 0 && (
                   <div key={mdIdx} className="mb-8">
-                    <h3 className="font-display font-semibold text-sm text-primary mb-3">
+                    <h3 className="font-display font-bold text-sm mb-3" style={{ color: '#B8900C' }}>
                       {t('matchday')} {mdIdx + 1}
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -131,9 +142,9 @@ export default function GroupStage() {
                 )
               ))}
               {allMatches.length === 0 && (
-                <div className="text-center text-muted-foreground py-16">
+                <div className="text-center py-16" style={{ color: '#6C757D' }}>
                   <p className="text-lg">⚽</p>
-                  <p className="mt-2">{t('playGroupMatchday')} 1</p>
+                  <p className="mt-2">{t('playGroupMatchday')} 1 {lang === 'pt' ? 'para ver os jogos' : 'to see matches'}</p>
                 </div>
               )}
             </motion.div>

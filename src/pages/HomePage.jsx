@@ -4,36 +4,43 @@ import { useI18n } from '@/lib/i18n';
 import { useGame } from '@/lib/gameContext';
 import StadiumBackground from '@/components/game/StadiumBackground';
 import TournamentLogo from '@/components/game/TournamentLogo';
-import LanguageSelector from '@/components/game/LanguageSelector';
 import GlobalLanguageBar from '@/components/game/GlobalLanguageBar';
-import { Trophy, Play, Globe } from 'lucide-react';
+import { Trophy, Play, Globe, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function HomePage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const { setPhase } = useGame();
 
   return (
-    <div className="min-h-screen relative flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen relative flex flex-col items-center justify-center px-4 py-12">
       <StadiumBackground />
       <GlobalLanguageBar />
 
-      <div className="relative z-10 flex flex-col items-center text-center max-w-2xl mx-auto">
-        {/* Language selector */}
+      <div className="relative z-10 flex flex-col items-center text-center max-w-2xl mx-auto w-full">
+
+        {/* Host strip */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-8"
+          transition={{ delay: 0.1 }}
+          className="flex items-center gap-3 mb-8 px-4 py-2 rounded-full text-xs font-semibold"
+          style={{ background: '#FFFFFF', border: '1px solid #DDE1E7', color: '#495057', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
         >
-          <LanguageSelector />
+          <span>🇺🇸 USA</span>
+          <span style={{ color: '#CDD1D7' }}>·</span>
+          <span>🇨🇦 Canada</span>
+          <span style={{ color: '#CDD1D7' }}>·</span>
+          <span>🇲🇽 Mexico</span>
+          <span style={{ color: '#CDD1D7' }}>·</span>
+          <span className="font-display font-bold" style={{ color: '#B8900C' }}>2026</span>
         </motion.div>
 
         {/* Logo */}
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: 'spring', duration: 1 }}
+          transition={{ type: 'spring', duration: 0.9 }}
           className="mb-6"
         >
           <TournamentLogo size="large" />
@@ -41,16 +48,17 @@ export default function HomePage() {
 
         {/* Title */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.25 }}
         >
-          <h1 className="font-display font-black text-3xl md:text-5xl lg:text-6xl tracking-tight">
-            <span className="bg-gradient-to-r from-primary via-yellow-300 to-primary bg-clip-text text-transparent animate-gradient">
-              {t('title').split(' ').slice(0, -2).join(' ')}
+          <h1 className="font-display font-black text-3xl md:text-5xl lg:text-6xl tracking-tight leading-tight"
+            style={{ color: '#212529' }}>
+            <span className="bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-500 bg-clip-text text-transparent animate-gradient">
+              FIFA World Cup
             </span>
             <br />
-            <span className="text-foreground">{t('title').split(' ').slice(-2).join(' ')}</span>
+            <span>2026 Simulator</span>
           </h1>
         </motion.div>
 
@@ -58,56 +66,65 @@ export default function HomePage() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="mt-4 text-muted-foreground text-base md:text-lg max-w-md"
+          transition={{ delay: 0.4 }}
+          className="mt-4 text-base md:text-lg max-w-md leading-relaxed"
+          style={{ color: '#495057' }}
         >
           {t('subtitle')}
         </motion.p>
 
-        {/* Features */}
+        {/* Feature chips */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="flex gap-4 md:gap-6 mt-8 text-muted-foreground text-xs md:text-sm"
+          transition={{ delay: 0.5 }}
+          className="flex flex-wrap gap-3 mt-8 justify-center"
         >
-          <div className="flex items-center gap-1.5">
-            <Globe className="w-4 h-4 text-primary" />
-            <span>48 {t('players') === 'Jogadores' ? 'Seleções' : 'Teams'}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Trophy className="w-4 h-4 text-primary" />
-            <span>{t('knockout')}</span>
-          </div>
+          {[
+            { icon: <Globe className="w-3.5 h-3.5" />, label: lang === 'pt' ? '48 Seleções' : '48 Teams' },
+            { icon: <Trophy className="w-3.5 h-3.5" />, label: lang === 'pt' ? 'Fase Eliminatória' : 'Knockout Stage' },
+            { icon: <Users className="w-3.5 h-3.5" />, label: lang === 'pt' ? 'Multi-jogador' : 'Multiplayer' },
+          ].map((f, i) => (
+            <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
+              style={{ background: '#FFFFFF', border: '1px solid #DDE1E7', color: '#495057', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+              <span style={{ color: '#259A5A' }}>{f.icon}</span>
+              {f.label}
+            </div>
+          ))}
         </motion.div>
 
-        {/* Start button */}
+        {/* Start CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
+          transition={{ delay: 0.7 }}
           className="mt-10"
         >
           <Button
             onClick={() => setPhase('registration')}
-            className="relative group px-8 py-6 text-lg font-display font-bold bg-gradient-to-r from-primary to-yellow-500 hover:from-yellow-500 hover:to-primary text-primary-foreground rounded-2xl shadow-2xl shadow-primary/30 transition-all duration-300 hover:shadow-primary/50 hover:scale-105"
+            className="px-10 py-6 text-lg font-display font-bold rounded-2xl shadow-xl hover:scale-105 transition-transform duration-200"
+            style={{
+              background: 'linear-gradient(135deg, #F5C400 0%, #FFD84D 50%, #F5C400 100%)',
+              color: '#1A1200',
+              boxShadow: '0 8px 24px rgba(245,196,0,0.30)',
+            }}
           >
             <Play className="w-5 h-5 mr-2 inline" />
             {t('startGame')}
-            <div className="absolute inset-0 rounded-2xl bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
           </Button>
         </motion.div>
 
-        {/* Bottom decoration */}
+        {/* Decorative rule */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.5 }}
-          transition={{ delay: 1.2 }}
-          className="mt-16 flex items-center gap-3 text-muted-foreground/50 text-xs"
+          transition={{ delay: 1 }}
+          className="mt-16 flex items-center gap-3 text-xs font-display tracking-[0.25em]"
+          style={{ color: '#ADB5BD' }}
         >
-          <div className="w-12 h-px bg-gradient-to-r from-transparent to-white/20" />
-          <span className="font-display tracking-[0.2em]">⚽ 2026 ⚽</span>
-          <div className="w-12 h-px bg-gradient-to-l from-transparent to-white/20" />
+          <div className="w-16 h-px" style={{ background: 'linear-gradient(to right, transparent, #CDD1D7)' }} />
+          ⚽ 2026 ⚽
+          <div className="w-16 h-px" style={{ background: 'linear-gradient(to left, transparent, #CDD1D7)' }} />
         </motion.div>
       </div>
     </div>

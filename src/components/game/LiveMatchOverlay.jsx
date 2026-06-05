@@ -34,22 +34,16 @@ export default function LiveMatchOverlay({ isVisible }) {
   const commentary = lang === 'pt' ? COMMENTARY_PT : COMMENTARY_EN;
 
   useEffect(() => {
-    if (!isVisible) {
-      setLineIndex(0);
-      return;
-    }
+    if (!isVisible) { setLineIndex(0); return; }
     setLineIndex(0);
     const interval = setInterval(() => {
       setLineIndex(i => {
-        if (i >= commentary.length - 1) {
-          clearInterval(interval);
-          return i;
-        }
+        if (i >= commentary.length - 1) { clearInterval(interval); return i; }
         return i + 1;
       });
     }, 700);
     return () => clearInterval(interval);
-  }, [isVisible, lang]);
+  }, [isVisible, lang, commentary.length]);
 
   return (
     <AnimatePresence>
@@ -60,45 +54,38 @@ export default function LiveMatchOverlay({ isVisible }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none"
-          style={{ background: 'rgba(6,10,20,0.85)', backdropFilter: 'blur(6px)' }}
+          style={{ background: 'rgba(255,255,255,0.88)', backdropFilter: 'blur(8px)' }}
         >
-          {/* Pulsing stadium light */}
-          <motion.div
-            className="absolute inset-0"
-            animate={{ opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            style={{ background: 'radial-gradient(ellipse at center, rgba(234,179,8,0.06) 0%, transparent 70%)' }}
-          />
-
-          <div className="relative z-10 text-center px-8 max-w-xl">
+          <div className="text-center px-8 max-w-xl">
             {/* LIVE badge */}
             <motion.div
               className="flex items-center justify-center gap-2 mb-6"
               animate={{ opacity: [1, 0.5, 1] }}
-              transition={{ duration: 1, repeat: Infinity }}
+              transition={{ duration: 0.9, repeat: Infinity }}
             >
-              <div className="w-2 h-2 rounded-full bg-red-500" />
-              <span className="text-red-400 font-display font-bold text-sm tracking-widest uppercase">LIVE</span>
+              <div className="w-2 h-2 rounded-full" style={{ background: '#E53535' }} />
+              <span className="font-display font-bold text-sm tracking-widest uppercase" style={{ color: '#E53535' }}>LIVE</span>
             </motion.div>
 
-            {/* Football animation */}
+            {/* Football */}
             <motion.div
               className="text-5xl mb-6"
-              animate={{ x: [-15, 15, -15], rotate: [0, 360] }}
+              animate={{ x: [-12, 12, -12], rotate: [0, 360] }}
               transition={{ x: { duration: 0.8, repeat: Infinity }, rotate: { duration: 1.2, repeat: Infinity, ease: 'linear' } }}
             >
               ⚽
             </motion.div>
 
-            {/* Commentary text */}
+            {/* Commentary */}
             <AnimatePresence mode="wait">
               <motion.p
                 key={lineIndex}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.4 }}
-                className="font-display font-bold text-lg md:text-2xl text-foreground"
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.35 }}
+                className="font-display font-bold text-lg md:text-2xl"
+                style={{ color: '#212529' }}
               >
                 {commentary[lineIndex]}
               </motion.p>
@@ -110,10 +97,7 @@ export default function LiveMatchOverlay({ isVisible }) {
                 <motion.div
                   key={i}
                   className="w-1.5 h-1.5 rounded-full"
-                  animate={{
-                    backgroundColor: i <= lineIndex ? '#EAB308' : 'rgba(255,255,255,0.15)',
-                    scale: i === lineIndex ? 1.4 : 1,
-                  }}
+                  animate={{ backgroundColor: i <= lineIndex ? '#F5C400' : 'rgba(0,0,0,0.12)', scale: i === lineIndex ? 1.5 : 1 }}
                   transition={{ duration: 0.3 }}
                 />
               ))}

@@ -11,7 +11,6 @@ import { getTeams, getTeamName } from '@/lib/teams';
 
 const ALL_TEAMS = getTeams();
 
-// Shuffles through random teams with a slot-machine feel, then locks in
 function TeamRevealSlot({ team, delay, lang, isHuman }) {
   const [displayTeam, setDisplayTeam] = useState(ALL_TEAMS[0]);
   const [locked, setLocked] = useState(false);
@@ -23,71 +22,58 @@ function TeamRevealSlot({ team, delay, lang, isHuman }) {
       intervalRef.current = setInterval(() => {
         setDisplayTeam(ALL_TEAMS[Math.floor(Math.random() * ALL_TEAMS.length)]);
         count++;
-        if (count > 18) {
+        if (count > 14) {
           clearInterval(intervalRef.current);
           setDisplayTeam(team);
           setLocked(true);
         }
-      }, 80);
+      }, 70);
     }, delay);
-
-    return () => {
-      clearTimeout(startTimeout);
-      clearInterval(intervalRef.current);
-    };
+    return () => { clearTimeout(startTimeout); clearInterval(intervalRef.current); };
   }, [team, delay]);
 
   const name = getTeamName(displayTeam, lang);
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8, y: 20 }}
+      initial={{ opacity: 0, scale: 0.85, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: delay / 1000 }}
-      className={`glass rounded-2xl p-4 flex items-center gap-4 transition-all duration-300 ${
-        locked && isHuman
-          ? 'border-2 border-primary shadow-lg shadow-primary/30 bg-primary/5'
-          : locked
-          ? 'border border-white/10'
-          : 'border border-white/5'
-      }`}
+      transition={{ duration: 0.4, delay: delay / 1000 }}
+      className={`rounded-2xl p-4 flex items-center gap-4 transition-all duration-300 ${locked && isHuman ? 'human-team-row' : 'card-light'}`}
     >
-      {/* Flag with slot animation */}
       <motion.div
-        className="text-4xl w-12 flex items-center justify-center"
-        animate={!locked ? { opacity: [1, 0.4, 1] } : { opacity: 1 }}
-        transition={{ duration: 0.16, repeat: locked ? 0 : Infinity }}
+        className="text-4xl w-12 flex items-center justify-center shrink-0"
+        animate={!locked ? { opacity: [1, 0.3, 1] } : { opacity: 1 }}
+        transition={{ duration: 0.14, repeat: locked ? 0 : Infinity }}
       >
         {displayTeam.flag}
       </motion.div>
 
       <div className="flex-1 min-w-0">
-        {/* Player name (only for human) */}
-        {isHuman && (
-          <p className="text-xs text-primary font-display font-bold tracking-wider uppercase mb-0.5">
+        {isHuman && locked && (
+          <p className="text-xs font-display font-bold tracking-wider uppercase mb-0.5" style={{ color: '#B8900C' }}>
             🎮 {team.player}
           </p>
         )}
-        <p className={`font-display font-bold text-sm md:text-base truncate ${
-          locked ? (isHuman ? 'text-primary' : 'text-foreground') : 'text-muted-foreground'
-        }`}>
+        <p className={`font-display font-bold text-sm md:text-base truncate`}
+          style={{ color: locked ? (isHuman ? '#92740A' : '#212529') : '#6C757D' }}>
           {name}
         </p>
         {locked && (
-          <p className="text-[10px] text-muted-foreground mt-0.5">
-            {lang === 'pt' ? 'Rating' : 'Rating'}: {team.rating}
+          <p className="text-[10px] mt-0.5" style={{ color: '#6C757D' }}>
+            Rating: {team.rating} · {team.confederation}
           </p>
         )}
       </div>
 
       {locked && (
         <motion.div
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: 'spring', duration: 0.5 }}
-          className="text-lg"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', duration: 0.4 }}
+          className="text-lg shrink-0"
         >
-          ✅
+          {isHuman ? '🌟' : '✅'}
         </motion.div>
       )}
     </motion.div>
@@ -97,11 +83,11 @@ function TeamRevealSlot({ team, delay, lang, isHuman }) {
 export default function TeamDraw() {
   const { t, lang } = useI18n();
   const { teams, startGroupStage } = useGame();
-  const [phase, setPhase] = useState('loading'); // loading | revealing | done
+  const [phase, setPhase] = useState('loading');
   const [loadingStep, setLoadingStep] = useState(0);
 
-  const humanTeams = teams.filter(t => t.isHuman);
-  const aiTeams = teams.filter(t => !t.isHuman);
+  const humanTeams = teams.filter(tm => tm.isHuman);
+  const aiTeams    = teams.filter(tm => !tm.isHuman);
 
   const LOADING_STEPS = lang === 'pt'
     ? ['Conectando ao servidor da FIFA…', 'Embaralhando seleções…', 'Preparando o sorteio…', 'Iniciando cerimônia…']
@@ -115,60 +101,39 @@ export default function TeamDraw() {
       setLoadingStep(step);
       if (step >= LOADING_STEPS.length) {
         clearInterval(interval);
-        setTimeout(() => setPhase('revealing'), 400);
+        setTimeout(() => setPhase('ready'), 350);
       }
-    }, 600);
+    }, 550);
     return () => clearInterval(interval);
-  }, [phase]);
-
-  // Time for all reveal animations to finish
-  const totalRevealTime = teams.length * 200 + 2000; // ms
-  useEffect(() => {
-    if (phase !== 'revealing') return;
-    const t = setTimeout(() => setPhase('done'), totalRevealTime);
-    return () => clearTimeout(t);
-  }, [phase, totalRevealTime]);
+  }, [phase, LOADING_STEPS.length]);
 
   return (
     <div className="min-h-screen relative px-4 py-8">
       <StadiumBackground />
       <GlobalLanguageBar />
 
-      {/* LOADING PHASE */}
+      {/* Loading overlay */}
       <AnimatePresence>
         {phase === 'loading' && (
           <motion.div
             key="loading"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 1.1 }}
+            exit={{ opacity: 0, scale: 1.03 }}
+            transition={{ exit: { duration: 0.3 } }}
             className="fixed inset-0 z-50 flex flex-col items-center justify-center"
-            style={{ background: 'radial-gradient(ellipse at center, #0d1525 0%, #060a14 100%)' }}
+            style={{ background: '#FFFFFF' }}
           >
-            {/* Stadium beams */}
-            <div className="absolute inset-0 overflow-hidden">
-              {[0.3, 0.5, 0.7].map((x, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute top-0 h-full w-px"
-                  style={{ left: `${x * 100}%`, background: `linear-gradient(to bottom, rgba(234,179,8,${0.3 - i * 0.05}), transparent)` }}
-                  initial={{ scaleY: 0 }}
-                  animate={{ scaleY: 1 }}
-                  transition={{ duration: 0.8, delay: i * 0.1 }}
-                />
-              ))}
-            </div>
-
-            <div className="relative z-10 text-center">
+            <div className="text-center px-6">
               <motion.div
-                className="text-7xl mb-8"
+                className="text-6xl mb-8"
                 animate={{ rotate: 360 }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+                transition={{ duration: 1.4, repeat: Infinity, ease: 'linear' }}
               >
                 ⚽
               </motion.div>
 
-              <h2 className="font-display font-black text-2xl md:text-4xl text-primary mb-8">
+              <h2 className="font-display font-black text-2xl md:text-3xl mb-8 tracking-wide" style={{ color: '#212529' }}>
                 {t('teamDraw')}
               </h2>
 
@@ -177,129 +142,126 @@ export default function TeamDraw() {
                   <motion.div
                     key={i}
                     initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: loadingStep > i ? 1 : 0.2, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
+                    animate={{ opacity: loadingStep > i ? 1 : 0.25, x: 0 }}
+                    transition={{ delay: i * 0.08 }}
                     className="flex items-center gap-3 text-sm"
                   >
                     <motion.div
-                      className="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0"
+                      className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0"
                       animate={{
-                        backgroundColor: loadingStep > i ? '#EAB308' : 'rgba(255,255,255,0.1)',
+                        background: loadingStep > i ? '#F5C400' : '#F3F4F6',
+                        color: loadingStep > i ? '#1A1200' : '#6C757D',
                       }}
                     >
                       {loadingStep > i ? '✓' : i + 1}
                     </motion.div>
-                    <span className={loadingStep > i ? 'text-foreground' : 'text-muted-foreground'}>
-                      {step}
-                    </span>
+                    <span style={{ color: loadingStep > i ? '#212529' : '#6C757D' }}>{step}</span>
                   </motion.div>
                 ))}
               </div>
 
-              {/* Pulse bar */}
-              <motion.div className="mt-10 w-48 mx-auto h-0.5 bg-white/10 rounded-full overflow-hidden">
+              <div className="mt-10 w-48 mx-auto h-1 rounded-full overflow-hidden" style={{ background: '#E9ECEF' }}>
                 <motion.div
-                  className="h-full bg-gradient-to-r from-primary to-yellow-400"
+                  className="h-full rounded-full"
+                  style={{ background: 'linear-gradient(90deg, #F5C400, #FFD84D)' }}
                   animate={{ x: ['-100%', '100%'] }}
-                  transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+                  transition={{ duration: 1.1, repeat: Infinity, ease: 'easeInOut' }}
                 />
-              </motion.div>
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* REVEAL PHASE */}
-      <div className="relative z-10 max-w-5xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: phase !== 'loading' ? 1 : 0, y: phase !== 'loading' ? 0 : -20 }}
-          className="text-center mb-10 pt-4"
-        >
-          <div className="flex justify-center mb-4">
-            <TournamentLogo size="small" />
-          </div>
-          <h2 className="font-display font-bold text-2xl md:text-4xl flex items-center justify-center gap-3">
-            <Sparkles className="w-6 h-6 text-primary" />
-            {t('teamDraw')}
-            <Sparkles className="w-6 h-6 text-primary" />
-          </h2>
-        </motion.div>
+      {/* Main content */}
+      {phase === 'ready' && (
+        <div className="relative z-10 max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-10 pt-4"
+          >
+            <div className="flex justify-center mb-4">
+              <TournamentLogo size="small" />
+            </div>
+            <h2 className="font-display font-bold text-2xl md:text-4xl flex items-center justify-center gap-3"
+              style={{ color: '#212529' }}>
+              <Sparkles className="w-6 h-6" style={{ color: '#B8900C' }} />
+              {t('teamDraw')}
+              <Sparkles className="w-6 h-6" style={{ color: '#B8900C' }} />
+            </h2>
+          </motion.div>
 
-        {phase !== 'loading' && (
-          <>
-            {/* Human players */}
-            {humanTeams.length > 0 && (
-              <div className="mb-10">
-                <motion.h3
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="font-display font-semibold text-lg text-primary mb-4 flex items-center gap-2"
-                >
-                  🎮 {t('players')}
-                </motion.h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {humanTeams.map((team, i) => (
-                    <TeamRevealSlot
-                      key={team.code}
-                      team={team}
-                      delay={i * 250}
-                      lang={lang}
-                      isHuman
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* AI teams */}
+          {/* Human players */}
+          {humanTeams.length > 0 && (
             <div className="mb-10">
               <motion.h3
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="font-display font-semibold text-lg text-muted-foreground mb-4 flex items-center gap-2"
+                className="font-display font-semibold text-base mb-4 flex items-center gap-2"
+                style={{ color: '#B8900C' }}
               >
-                🤖 {t('aiControlled')}
+                🎮 {t('players')}
               </motion.h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                {aiTeams.map((team, i) => (
-                  <motion.div
-                    key={team.code}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: (humanTeams.length * 0.25) + i * 0.04, duration: 0.3 }}
-                    className="glass rounded-xl p-2.5 flex flex-col items-center gap-1.5 text-center"
-                  >
-                    <span className="text-2xl">{team.flag}</span>
-                    <span className="text-[10px] font-medium text-muted-foreground leading-tight">
-                      {getTeamName(team, lang)}
-                    </span>
-                  </motion.div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {humanTeams.map((team, i) => (
+                  <TeamRevealSlot key={team.code} team={team} delay={i * 200} lang={lang} isHuman />
                 ))}
               </div>
             </div>
-          </>
-        )}
-
-        {/* Continue button */}
-        <AnimatePresence>
-          {phase === 'done' && (
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex justify-center"
-            >
-              <Button
-                onClick={startGroupStage}
-                className="px-8 py-6 text-lg font-display font-bold bg-gradient-to-r from-primary to-yellow-500 hover:from-yellow-500 hover:to-primary text-primary-foreground rounded-2xl shadow-xl shadow-primary/20"
-              >
-                {t('continueToGroups')}
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </motion.div>
           )}
-        </AnimatePresence>
-      </div>
+
+          {/* AI teams */}
+          <div className="mb-10">
+            <motion.h3
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1 }}
+              className="font-display font-semibold text-base mb-4 flex items-center gap-2"
+              style={{ color: '#6C757D' }}
+            >
+              🤖 {t('aiControlled')}
+            </motion.h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+              {aiTeams.map((team, i) => (
+                <motion.div
+                  key={team.code}
+                  initial={{ opacity: 0, scale: 0.85 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: i * 0.03, duration: 0.25 }}
+                  className="card-light rounded-xl p-2.5 flex flex-col items-center gap-1.5 text-center"
+                >
+                  <span className="text-2xl">{team.flag}</span>
+                  <span className="text-[10px] font-medium leading-tight" style={{ color: '#495057' }}>
+                    {getTeamName(team, lang)}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Continue — immediately available */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="flex justify-center pb-8"
+          >
+            <Button
+              onClick={startGroupStage}
+              className="px-10 py-6 text-lg font-display font-bold rounded-2xl shadow-xl hover:scale-105 transition-transform"
+              style={{
+                background: 'linear-gradient(135deg, #F5C400, #FFD84D)',
+                color: '#1A1200',
+                boxShadow: '0 6px 20px rgba(245,196,0,0.30)',
+              }}
+            >
+              {t('continueToGroups')}
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }

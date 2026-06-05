@@ -1,28 +1,37 @@
+const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
+
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTheme } from '@/lib/themeContext';
+
+const COPA1 = 'https://media.db.com/images/public/6a20aae66be16c9d1d43c7fb/87fc41693_FIFA-2026-World-Cup-Logo-75.png';
+const COPA2 = 'https://media.db.com/images/public/6a20aae66be16c9d1d43c7fb/0003b8fa6_copa2.png';
 
 export default function TournamentLogo({ size = 'large' }) {
-  const s = size === 'large' ? 'w-32 h-32 md:w-40 md:h-40' : 'w-16 h-16';
-  const textSize = size === 'large' ? 'text-lg md:text-xl' : 'text-xs';
+  const { isDark } = useTheme();
+  const dim = size === 'large' ? 'w-40 h-40 md:w-52 md:h-52' : 'w-20 h-20';
+  const src = isDark ? COPA2 : COPA1;
 
   return (
     <motion.div
-      className={`${s} relative flex items-center justify-center`}
-      animate={{ rotateY: [0, 360] }}
-      transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+      className={`${dim} relative flex items-center justify-center`}
+      animate={{ y: [0, -6, 0] }}
+      transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
     >
-      {/* Outer ring */}
-      <div className="absolute inset-0 rounded-full border-2 border-primary/40 animate-pulse-glow" />
-      <div className="absolute inset-1 rounded-full border border-primary/20" />
-      
-      {/* Inner glow */}
-      <div className="absolute inset-3 rounded-full bg-gradient-to-br from-primary/20 via-secondary/10 to-primary/20" />
-      
-      {/* Trophy icon */}
-      <div className={`relative z-10 font-display font-bold ${textSize} text-primary flex flex-col items-center`}>
-        <span className="text-3xl md:text-5xl">🏆</span>
-        {size === 'large' && <span className="mt-1 text-[10px] tracking-[0.3em] text-primary/70 uppercase">2026</span>}
-      </div>
+      <motion.img
+        key={src}
+        src={src}
+        alt="FIFA World Cup 2026"
+        initial={{ opacity: 0, scale: 0.92 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+        className="w-full h-full object-contain"
+        style={{
+          filter: isDark
+            ? 'drop-shadow(0 0 18px rgba(0,162,255,0.30)) drop-shadow(0 4px 24px rgba(57,255,20,0.15))'
+            : 'drop-shadow(0 4px 18px rgba(245,196,0,0.25))',
+        }}
+      />
     </motion.div>
   );
 }
