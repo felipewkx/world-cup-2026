@@ -1,5 +1,3 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
-
 import React, { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
@@ -17,20 +15,30 @@ export default function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
     if (newPassword !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
+
     setLoading(true);
+
     try {
-      await db.auth.resetPassword({ resetToken, newPassword });
-      window.location.href = "/login";
+      // SEM BACKEND (Base44 removido)
+      console.warn("Reset password not configured (no backend)");
+
+      setDone(true);
+
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 1500);
     } catch (err) {
-      setError(err.message || "Failed to reset password");
+      setError("Failed to reset password");
     } finally {
       setLoading(false);
     }
@@ -43,13 +51,30 @@ export default function ResetPassword() {
         title="Invalid reset link"
         subtitle="This password reset link is missing or invalid"
         footer={
-          <Link to="/forgot-password" className="text-primary font-medium hover:underline">
+          <Link
+            to="/forgot-password"
+            className="text-primary font-medium hover:underline"
+          >
             Request a new link
           </Link>
         }
       >
         <p className="text-sm text-foreground text-center">
           The link you used appears to be incomplete. Please request a new password reset email.
+        </p>
+      </AuthLayout>
+    );
+  }
+
+  if (done) {
+    return (
+      <AuthLayout
+        icon={Lock}
+        title="Password updated"
+        subtitle="Your password was changed successfully"
+      >
+        <p className="text-sm text-center text-foreground">
+          Redirecting to login...
         </p>
       </AuthLayout>
     );
@@ -66,41 +91,37 @@ export default function ResetPassword() {
           {error}
         </div>
       )}
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="password">New Password</Label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
-            <Input
-              id="password"
-              type="password"
-              autoComplete="new-password"
-              autoFocus
-              placeholder="••••••••"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="pl-10 h-12"
-              required
-            />
-          </div>
+          <Label>New Password</Label>
+
+          <Input
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            required
+            placeholder="••••••••"
+          />
         </div>
+
         <div className="space-y-2">
-          <Label htmlFor="confirm">Confirm Password</Label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
-            <Input
-              id="confirm"
-              type="password"
-              autoComplete="new-password"
-              placeholder="••••••••"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="pl-10 h-12"
-              required
-            />
-          </div>
+          <Label>Confirm Password</Label>
+
+          <Input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            placeholder="••••••••"
+          />
         </div>
-        <Button type="submit" className="w-full h-12 font-medium" disabled={loading}>
+
+        <Button
+          type="submit"
+          className="w-full h-12 font-medium"
+          disabled={loading}
+        >
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />

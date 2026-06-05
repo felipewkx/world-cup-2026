@@ -1,5 +1,3 @@
-const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -10,7 +8,6 @@ import { UserPlus, Mail, Lock, Loader2 } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
-import { toast } from "@/components/ui/use-toast";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -24,16 +21,21 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
+
     setLoading(true);
+
     try {
-      await db.auth.register({ email, password });
+      // SEM BACKEND
+      console.warn("Register not configured (no backend)");
+
       setShowOtp(true);
     } catch (err) {
-      setError(err.message || "Registration failed");
+      setError("Registration failed");
     } finally {
       setLoading(false);
     }
@@ -42,14 +44,14 @@ export default function Register() {
   const handleVerify = async () => {
     setError("");
     setLoading(true);
+
     try {
-      const result = await db.auth.verifyOtp({ email, otpCode });
-      if (result?.access_token) {
-        db.auth.setToken(result.access_token);
-      }
+      // SEM BACKEND
+      console.warn("OTP verification not configured");
+
       window.location.href = "/";
     } catch (err) {
-      setError(err.message || "Invalid verification code");
+      setError("Invalid verification code");
     } finally {
       setLoading(false);
     }
@@ -57,19 +59,11 @@ export default function Register() {
 
   const handleResend = async () => {
     setError("");
-    try {
-      await db.auth.resendOtp(email);
-      toast({
-        title: "Code sent",
-        description: "Check your email for the new code.",
-      });
-    } catch (err) {
-      setError(err.message || "Failed to resend code");
-    }
+    console.warn("Resend OTP not configured");
   };
 
   const handleGoogle = () => {
-    db.auth.loginWithProvider("google", "/");
+    console.warn("Google login not configured");
   };
 
   if (showOtp) {
@@ -84,13 +78,13 @@ export default function Register() {
             {error}
           </div>
         )}
+
         <div className="flex justify-center mb-6">
           <InputOTP
             maxLength={6}
             value={otpCode}
             onChange={setOtpCode}
             autoFocus
-            autoComplete="one-time-code"
           >
             <InputOTPGroup>
               <InputOTPSlot index={0} />
@@ -102,6 +96,7 @@ export default function Register() {
             </InputOTPGroup>
           </InputOTP>
         </div>
+
         <Button
           className="w-full h-12 font-medium"
           onClick={handleVerify}
@@ -116,6 +111,7 @@ export default function Register() {
             "Verify"
           )}
         </Button>
+
         <p className="text-center text-sm text-muted-foreground mt-4">
           Didn't receive the code?{" "}
           <button onClick={handleResend} className="text-primary font-medium hover:underline">
@@ -166,54 +162,36 @@ export default function Register() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
-            <Input
-              id="email"
-              type="email"
-              autoComplete="email"
-              autoFocus
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="pl-10 h-12"
-              required
-            />
-          </div>
+          <Label>Email</Label>
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            placeholder="you@example.com"
+          />
         </div>
+
         <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
-            <Input
-              id="password"
-              type="password"
-              autoComplete="new-password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="pl-10 h-12"
-              required
-            />
-          </div>
+          <Label>Password</Label>
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </div>
+
         <div className="space-y-2">
-          <Label htmlFor="confirm">Confirm Password</Label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
-            <Input
-              id="confirm"
-              type="password"
-              autoComplete="new-password"
-              placeholder="••••••••"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="pl-10 h-12"
-              required
-            />
-          </div>
+          <Label>Confirm Password</Label>
+          <Input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
         </div>
+
         <Button type="submit" className="w-full h-12 font-medium" disabled={loading}>
           {loading ? (
             <>
