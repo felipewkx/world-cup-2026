@@ -23,7 +23,7 @@ export default function ChampionScreen() {
           ...opts,
           particleCount: 100,
           spread: 80,
-          origin: { y: 0.6 }
+          origin: { y: 0.6 },
         });
 
       fire({ angle: 60, origin: { x: 0 } });
@@ -35,7 +35,7 @@ export default function ChampionScreen() {
           particleCount: 220,
           spread: 170,
           origin: { y: 0.4 },
-          colors: ["#F5C400", "#259A5A", "#E53535", "#FFFFFF", "#FF8A00"]
+          colors: ["#F5C400", "#259A5A", "#E53535", "#FFFFFF", "#FF8A00"],
         });
       }, 1000);
     }
@@ -63,7 +63,7 @@ export default function ChampionScreen() {
       emoji: "🥇",
       bg: "#FFF9E6",
       border: "#F5C400",
-      textColor: "#92740A"
+      textColor: "#92740A",
     },
     {
       team: runnerUp,
@@ -71,7 +71,7 @@ export default function ChampionScreen() {
       emoji: "🥈",
       bg: "#F8F9FA",
       border: "#ADB5BD",
-      textColor: "#495057"
+      textColor: "#495057",
     },
     {
       team: third,
@@ -79,7 +79,7 @@ export default function ChampionScreen() {
       emoji: "🥉",
       bg: "#FFF5EE",
       border: "#FF8A00",
-      textColor: "#C05A00"
+      textColor: "#C05A00",
     },
     {
       team: fourth,
@@ -87,8 +87,8 @@ export default function ChampionScreen() {
       emoji: "🏅",
       bg: "#F8F9FA",
       border: "#CDD1D7",
-      textColor: "#6C757D"
-    }
+      textColor: "#6C757D",
+    },
   ].filter((r) => r.team);
 
   return (
@@ -138,7 +138,7 @@ export default function ChampionScreen() {
               backgroundSize: "200% 100%",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
-              animation: "gradient-shift 3s ease infinite"
+              animation: "gradient-shift 3s ease infinite",
             }}
           >
             {champName}
@@ -152,10 +152,7 @@ export default function ChampionScreen() {
           transition={{ delay: 1.5 }}
           className="w-full mb-10"
         >
-          <h3
-            className="font-display font-bold text-lg text-center mb-6 flex items-center justify-center gap-2"
-            style={{ color: "#212529" }}
-          >
+          <h3 className="font-display font-bold text-lg text-center mb-6 flex items-center justify-center gap-2 text-[#212529] dark:text-[#a3ffc2] dark:[text-shadow:0_0_5px_#259A5A,0_0_10px_rgba(37,154,146,0.5)]">
             <Medal className="w-5 h-5" style={{ color: "#B8900C" }} />
             {t("finalRanking")}
           </h3>
@@ -171,7 +168,7 @@ export default function ChampionScreen() {
                 style={{
                   background: r.bg,
                   borderColor: r.border,
-                  boxShadow: "0 1px 4px rgba(0,0,0,0.06)"
+                  boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
                 }}
               >
                 <span className="text-2xl md:text-3xl">{r.emoji}</span>
@@ -197,10 +194,7 @@ export default function ChampionScreen() {
         </motion.div>
 
         {/* New game */}
-        <Button
-          onClick={resetGame}
-          className="px-8 py-5 font-bold rounded-2xl"
-        >
+        <Button onClick={resetGame} className="px-8 py-5 font-bold rounded-2xl">
           <RotateCcw className="w-5 h-5 mr-2" />
           {t("newGame")}
         </Button>
