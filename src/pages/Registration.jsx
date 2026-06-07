@@ -99,9 +99,10 @@ export default function Registration() {
               onChange={(e) => setName(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && addPlayer()}
               placeholder={t("enterName")}
-              className="border-border bg-white text-foreground placeholder:text-muted-foreground"
+              className="border-border bg-white text-foreground placeholder:text-muted-foreground dark:bg-[#1A202C] dark:text-[#F8F9FA] dark:placeholder:text-[#718096]"
               maxLength={30}
             />
+
             <Button
               onClick={addPlayer}
               disabled={!name.trim() || players.length >= 48}

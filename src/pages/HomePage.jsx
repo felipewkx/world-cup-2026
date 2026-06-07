@@ -23,21 +23,15 @@ export default function HomePage() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="flex items-center gap-3 mb-8 px-4 py-2 rounded-full text-xs font-semibold"
-          style={{
-            background: "#032961",
-            border: "1px solid #DDE1E7",
-            color: "#14a707",
-            boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
-          }}
+          className="flex items-center gap-3 mb-8 px-4 py-2 rounded-full text-xs font-semibold bg-[#032961] border border-[#DDE1E7] text-[#14a707] shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:bg-[rgba(3,41,97,0.2)] dark:border-[rgba(255,255,255,0.15)]"
         >
-          <span>🇺🇸 USA</span>
-          <span style={{ color: "#CDD1D7" }}>·</span>
-          <span>🇨🇦 Canada</span>
-          <span style={{ color: "#CDD1D7" }}>·</span>
-          <span>🇲🇽 Mexico</span>
-          <span style={{ color: "#CDD1D7" }}>·</span>
-          <span className="font-display font-bold" style={{ color: "#B8900C" }}>
+          <span className="dark:text-[#F8F9FA]">🇺🇸 USA</span>
+          <span className="text-[#CDD1D7] dark:text-[#4A5568]">·</span>
+          <span className="dark:text-[#F8F9FA]">🇨🇦 Canada</span>
+          <span className="text-[#CDD1D7] dark:text-[#4A5568]">·</span>
+          <span className="dark:text-[#F8F9FA]">🇲🇽 Mexico</span>
+          <span className="text-[#CDD1D7] dark:text-[#4A5568]">·</span>
+          <span className="font-display font-bold text-[#B8900C] dark:text-[#FFD343]">
             2026
           </span>
         </motion.div>
@@ -60,13 +54,21 @@ export default function HomePage() {
         >
           <h1
             className="font-display font-black text-3xl md:text-5xl lg:text-6xl tracking-tight leading-tight"
-            style={{ color: "#212529" }}
+            style={{ color: "inherit" }}
           >
-            <span className="bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-500 bg-clip-text text-transparent animate-gradient">
+            <span
+              className="bg-gradient-to-r from-[#259A5A] via-[#E61D25] to-[#2A398D] bg-clip-text text-transparent inline-block"
+              style={{ WebkitTextFillColor: "transparent" }}
+            >
               FIFA World Cup
             </span>
             <br />
-            <span>2026 Simulator</span>
+            <span
+              className="font-extrabold text-2xl md:text-4xl tracking-wide opacity-90 block mt-1"
+              style={{ color: "var(--foreground, #F8F9FA) !important" }}
+            >
+              2026 Simulator
+            </span>
           </h1>
         </motion.div>
 
