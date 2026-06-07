@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
-import { useGame } from "@/lib/gameContext";
+import { useGameState, useGameActions } from "@/lib/gameContext";
 import { getTeamName } from "@/lib/teams";
 import StadiumBackground from "@/components/game/StadiumBackground";
 import GlobalLanguageBar from "@/components/game/GlobalLanguageBar";
@@ -11,7 +11,8 @@ import confetti from "canvas-confetti";
 
 export default function ChampionScreen() {
   const { lang, t } = useI18n();
-  const { champion, bracket, resetGame } = useGame();
+  const { champion, bracket } = useGameState();
+  const { resetGame } = useGameActions();
   const confettiDone = useRef(false);
 
   useEffect(() => {

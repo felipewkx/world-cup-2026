@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { getTeamName } from "@/lib/teams";
 
-export default function GroupTable({ group, index = 0 }) {
+function GroupTable({ group, index = 0 }) {
   const { lang } = useI18n();
 
   return (
@@ -203,3 +203,5 @@ export default function GroupTable({ group, index = 0 }) {
     </motion.div>
   );
 }
+
+export default React.memo(GroupTable);

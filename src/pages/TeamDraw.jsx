@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
-import { useGame } from "@/lib/gameContext";
+import { useGameState, useGameActions } from "@/lib/gameContext";
 import StadiumBackground from "@/components/game/StadiumBackground";
 import TournamentLogo from "@/components/game/TournamentLogo";
 import GlobalLanguageBar from "@/components/game/GlobalLanguageBar";
@@ -11,7 +11,12 @@ import { getTeams, getTeamName } from "@/lib/teams";
 
 const ALL_TEAMS = getTeams();
 
-function TeamRevealSlot({ team, delay, lang, isHuman }) {
+const TeamRevealSlot = React.memo(function TeamRevealSlot({
+  team,
+  delay,
+  lang,
+  isHuman,
+}) {
   const [displayTeam, setDisplayTeam] = useState(ALL_TEAMS[0]);
   const [locked, setLocked] = useState(false);
   const intervalRef = useRef(null);
@@ -90,31 +95,35 @@ function TeamRevealSlot({ team, delay, lang, isHuman }) {
       )}
     </motion.div>
   );
-}
+});
 
 export default function TeamDraw() {
   const { t, lang } = useI18n();
-  const { teams, startGroupStage } = useGame();
+  const { teams } = useGameState();
+  const { startGroupStage } = useGameActions();
   const [phase, setPhase] = useState("loading");
   const [loadingStep, setLoadingStep] = useState(0);
 
-  const humanTeams = teams.filter((tm) => tm.isHuman);
-  const aiTeams = teams.filter((tm) => !tm.isHuman);
+  const humanTeams = useMemo(() => teams.filter((tm) => tm.isHuman), [teams]);
+  const aiTeams = useMemo(() => teams.filter((tm) => !tm.isHuman), [teams]);
 
-  const LOADING_STEPS =
-    lang === "pt"
-      ? [
-          "Conectando ao servidor da FIFA…",
-          "Embaralhando seleções…",
-          "Preparando o sorteio…",
-          "Iniciando cerimônia…",
-        ]
-      : [
-          "Connecting to FIFA server…",
-          "Shuffling national teams…",
-          "Preparing the draw…",
-          "Starting ceremony…",
-        ];
+  const LOADING_STEPS = useMemo(
+    () =>
+      lang === "pt"
+        ? [
+            "Conectando ao servidor da FIFA…",
+            "Embaralhando seleções…",
+            "Preparando o sorteio…",
+            "Iniciando cerimônia…",
+          ]
+        : [
+            "Connecting to FIFA server…",
+            "Shuffling national teams…",
+            "Preparing the draw…",
+            "Starting ceremony…",
+          ],
+    [lang],
+  );
 
   useEffect(() => {
     if (phase !== "loading") return;

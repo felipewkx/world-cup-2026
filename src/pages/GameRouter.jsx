@@ -1,12 +1,12 @@
-import React from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useGame } from '@/lib/gameContext';
-import HomePage from './HomePage';
-import Registration from './Registration';
-import TeamDraw from './TeamDraw';
-import GroupStage from './GroupStage';
-import KnockoutStage from './KnockoutStage';
-import ChampionScreen from './ChampionScreen';
+import React from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useGameState } from "@/lib/gameContext";
+import HomePage from "./HomePage";
+import Registration from "./Registration";
+import TeamDraw from "./TeamDraw";
+import GroupStage from "./GroupStage";
+import KnockoutStage from "./KnockoutStage";
+import ChampionScreen from "./ChampionScreen";
 
 const pages = {
   home: HomePage,
@@ -18,7 +18,7 @@ const pages = {
 };
 
 export default function GameRouter() {
-  const { phase } = useGame();
+  const { phase } = useGameState();
   const Page = pages[phase] || HomePage;
 
   return (

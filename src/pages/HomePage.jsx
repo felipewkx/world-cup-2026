@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
-import { useGame } from "@/lib/gameContext";
+import { useGameActions } from "@/lib/gameContext";
 import StadiumBackground from "@/components/game/StadiumBackground";
 import TournamentLogo from "@/components/game/TournamentLogo";
 import GlobalLanguageBar from "@/components/game/GlobalLanguageBar";
@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
   const { t, lang } = useI18n();
-  const { setPhase } = useGame();
+  const { setPhase } = useGameActions();
 
   return (
     <div className="min-h-screen relative flex flex-col items-center justify-center px-4 py-12">

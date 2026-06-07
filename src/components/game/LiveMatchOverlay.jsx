@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useI18n } from '@/lib/i18n';
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useI18n } from "@/lib/i18n";
 
 const COMMENTARY_EN = [
   "The match is heating up…",
@@ -28,17 +28,23 @@ const COMMENTARY_PT = [
   "Calculando resultado final…",
 ];
 
-export default function LiveMatchOverlay({ isVisible }) {
+function LiveMatchOverlay({ isVisible }) {
   const { lang } = useI18n();
   const [lineIndex, setLineIndex] = useState(0);
-  const commentary = lang === 'pt' ? COMMENTARY_PT : COMMENTARY_EN;
+  const commentary = lang === "pt" ? COMMENTARY_PT : COMMENTARY_EN;
 
   useEffect(() => {
-    if (!isVisible) { setLineIndex(0); return; }
+    if (!isVisible) {
+      setLineIndex(0);
+      return;
+    }
     setLineIndex(0);
     const interval = setInterval(() => {
-      setLineIndex(i => {
-        if (i >= commentary.length - 1) { clearInterval(interval); return i; }
+      setLineIndex((i) => {
+        if (i >= commentary.length - 1) {
+          clearInterval(interval);
+          return i;
+        }
         return i + 1;
       });
     }, 700);
@@ -54,7 +60,10 @@ export default function LiveMatchOverlay({ isVisible }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none"
-          style={{ background: 'rgba(255,255,255,0.88)', backdropFilter: 'blur(8px)' }}
+          style={{
+            background: "rgba(255,255,255,0.88)",
+            backdropFilter: "blur(8px)",
+          }}
         >
           <div className="text-center px-8 max-w-xl">
             {/* LIVE badge */}
@@ -63,15 +72,26 @@ export default function LiveMatchOverlay({ isVisible }) {
               animate={{ opacity: [1, 0.5, 1] }}
               transition={{ duration: 0.9, repeat: Infinity }}
             >
-              <div className="w-2 h-2 rounded-full" style={{ background: '#E53535' }} />
-              <span className="font-display font-bold text-sm tracking-widest uppercase" style={{ color: '#E53535' }}>LIVE</span>
+              <div
+                className="w-2 h-2 rounded-full"
+                style={{ background: "#E53535" }}
+              />
+              <span
+                className="font-display font-bold text-sm tracking-widest uppercase"
+                style={{ color: "#E53535" }}
+              >
+                LIVE
+              </span>
             </motion.div>
 
             {/* Football */}
             <motion.div
               className="text-5xl mb-6"
               animate={{ x: [-12, 12, -12], rotate: [0, 360] }}
-              transition={{ x: { duration: 0.8, repeat: Infinity }, rotate: { duration: 1.2, repeat: Infinity, ease: 'linear' } }}
+              transition={{
+                x: { duration: 0.8, repeat: Infinity },
+                rotate: { duration: 1.2, repeat: Infinity, ease: "linear" },
+              }}
             >
               ⚽
             </motion.div>
@@ -85,7 +105,7 @@ export default function LiveMatchOverlay({ isVisible }) {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.35 }}
                 className="font-display font-bold text-lg md:text-2xl"
-                style={{ color: '#212529' }}
+                style={{ color: "#212529" }}
               >
                 {commentary[lineIndex]}
               </motion.p>
@@ -97,7 +117,11 @@ export default function LiveMatchOverlay({ isVisible }) {
                 <motion.div
                   key={i}
                   className="w-1.5 h-1.5 rounded-full"
-                  animate={{ backgroundColor: i <= lineIndex ? '#F5C400' : 'rgba(0,0,0,0.12)', scale: i === lineIndex ? 1.5 : 1 }}
+                  animate={{
+                    backgroundColor:
+                      i <= lineIndex ? "#F5C400" : "rgba(0,0,0,0.12)",
+                    scale: i === lineIndex ? 1.5 : 1,
+                  }}
                   transition={{ duration: 0.3 }}
                 />
               ))}
@@ -108,3 +132,5 @@ export default function LiveMatchOverlay({ isVisible }) {
     </AnimatePresence>
   );
 }
+
+export default React.memo(LiveMatchOverlay);

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
-import { useGame } from "@/lib/gameContext";
+import { useGameState, useGameActions } from "@/lib/gameContext";
 import StadiumBackground from "@/components/game/StadiumBackground";
 import TournamentLogo from "@/components/game/TournamentLogo";
 import GlobalLanguageBar from "@/components/game/GlobalLanguageBar";
@@ -19,7 +19,8 @@ import {
 
 export default function Registration() {
   const { t } = useI18n();
-  const { players, setPlayers, setPhase, startDraw } = useGame();
+  const { players } = useGameState();
+  const { setPlayers, setPhase, startDraw } = useGameActions();
   const [name, setName] = useState("");
   const [editingIdx, setEditingIdx] = useState(-1);
   const [editName, setEditName] = useState("");
