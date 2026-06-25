@@ -2,16 +2,13 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "@/lib/themeContext";
 
-const COPA1 = "/copa1.png";
-const COPA2 = "/copa2.png";
+const COPA1 = "copa1.png";
+const COPA2 = "copa2.png";
 
 export default function TournamentLogo({ size = "large" }) {
   const { isDark } = useTheme();
 
-  const dim =
-    size === "large"
-      ? "w-40 h-40 md:w-52 md:h-52"
-      : "w-20 h-20";
+  const dim = size === "large" ? "w-40 h-40 md:w-52 md:h-52" : "w-20 h-20";
 
   const src = isDark ? COPA2 : COPA1;
 

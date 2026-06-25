@@ -106,7 +106,7 @@ export default function ChampionScreen() {
           className="mb-6"
         >
           <img
-            src="/copa1.png"
+            src="copa1.png"
             alt="FIFA World Cup 2026"
             className="w-36 h-36 md:w-48 md:h-48 object-contain animate-float"
             style={{ filter: "drop-shadow(0 6px 24px rgba(245,196,0,0.35))" }}
