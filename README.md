@@ -5,7 +5,7 @@
 A web application designed for football fans to simulate the groups, match outcomes, and knockout stages of the historic 2026 FIFA World Cup. The project features an interactive and dynamic interface where users can predict scores, calculate group standings automatically, and trace the path of 48 national teams to the world title.
 
 ## Demo
-Access the application: https://worldcupsimulator26.netlify.app/
+Access the application: https://felipewkx.github.io/world-cup-2026/
 
 ## About the Project
 The goal of this project is to provide an intuitive and complete simulation experience for the upcoming 2026 World Cup, reflecting its new official format. The application allows users to manipulate match results in real-time, automatically handling complex tournament rules such as group stage tie-breakers and the qualification of the best third-placed teams.
